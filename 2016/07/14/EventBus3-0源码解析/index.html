@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="EventBus," />
 
 
 
@@ -84,15 +84,16 @@
 
 
 
-<meta name="description" content="一个孤独的Boy，努力爬坑ing。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Mr.Anler">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="1.概述在EventBus3.0中 和 2.0 有这不小的变化。先看看如何在项目中使用EvetBus3.0吧。一般的基本使用大都这样子：12345678910111213141516171819202122232425262728293031@Overridepublic void onStart() &amp;#123;    super.onStart();    EventBus.getDefaul">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EventBus3.0源码解析">
+<meta property="og:url" content="http://yoursite.com/2016/07/14/EventBus3-0源码解析/index.html">
 <meta property="og:site_name" content="Mr.Anler">
-<meta property="og:description" content="一个孤独的Boy，努力爬坑ing。">
+<meta property="og:description" content="1.概述在EventBus3.0中 和 2.0 有这不小的变化。先看看如何在项目中使用EvetBus3.0吧。一般的基本使用大都这样子：12345678910111213141516171819202122232425262728293031@Overridepublic void onStart() &amp;#123;    super.onStart();    EventBus.getDefaul">
+<meta property="og:updated_time" content="2016-07-14T00:16:20.845Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mr.Anler">
-<meta name="twitter:description" content="一个孤独的Boy，努力爬坑ing。">
+<meta name="twitter:title" content="EventBus3.0源码解析">
+<meta name="twitter:description" content="1.概述在EventBus3.0中 和 2.0 有这不小的变化。先看看如何在项目中使用EvetBus3.0吧。一般的基本使用大都这样子：12345678910111213141516171819202122232425262728293031@Overridepublic void onStart() &amp;#123;    super.onStart();    EventBus.getDefaul">
 
 
 
@@ -113,9 +114,9 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2016/07/14/EventBus3-0源码解析/"/>
 
-  <title> Mr.Anler </title>
+  <title> EventBus3.0源码解析 | Mr.Anler </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -136,9 +137,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -235,9 +234,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -257,10 +256,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/07/14/EventBus3-0源码解析/" itemprop="url">
-                  EventBus3.0源码解析
-                </a>
+                EventBus3.0源码解析
               
             
           </h1>
@@ -319,9 +315,7 @@
       
 
       
-        
-          
-            <h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h2><p>在EventBus3.0中 和 2.0 有这不小的变化。<br>先看看如何在项目中使用EvetBus3.0吧。<br>一般的基本使用大都这样子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onStart();</span><br><span class="line">    EventBus.getDefault().register(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    EventBus.getDefault().unregister(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">super</span>.onStop();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Subscribe</span>(sticky = <span class="keyword">true</span>, threadMode = ThreadMode.MAIN) <span class="comment">//在ui线程执行</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMainEvent</span><span class="params">(UserDetail userInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Subscribe</span>(threadMode = ThreadMode.ASYNC) <span class="comment">//异步执行</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAsynclEvent</span><span class="params">(UserDetail userInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Subscribe</span>( threadMode = ThreadMode.POSTING) <span class="comment">//直接执行</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPostingEvent</span><span class="params">(UserDetail userInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Subscribe</span>(threadMode = ThreadMode.BACKGROUND) <span class="comment">//后台执行</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBackgroundEvent</span><span class="params">(UserDetail userInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1.概述"></a>1.概述</h2><p>在EventBus3.0中 和 2.0 有这不小的变化。<br>先看看如何在项目中使用EvetBus3.0吧。<br>一般的基本使用大都这样子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onStart();</span><br><span class="line">    EventBus.getDefault().register(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    EventBus.getDefault().unregister(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">super</span>.onStop();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Subscribe</span>(sticky = <span class="keyword">true</span>, threadMode = ThreadMode.MAIN) <span class="comment">//在ui线程执行</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onMainEvent</span><span class="params">(UserDetail userInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Subscribe</span>(threadMode = ThreadMode.ASYNC) <span class="comment">//异步执行</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAsynclEvent</span><span class="params">(UserDetail userInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Subscribe</span>( threadMode = ThreadMode.POSTING) <span class="comment">//直接执行</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onPostingEvent</span><span class="params">(UserDetail userInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Subscribe</span>(threadMode = ThreadMode.BACKGROUND) <span class="comment">//后台执行</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBackgroundEvent</span><span class="params">(UserDetail userInfo)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>在3.0版本的EventBus上，不再限制函数名字,只需在你想要接收函数上方加上注解<code>@Subscribe</code>即可，再根据需求添加相应的<code>threadMode</code>(里面的标志将决定该方法运行在哪个线程)，如果希望可以延迟接收，则可以加上<code>sticky = true</code>的标志。</p>
 <p>再说注册后，如何发送event。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EventBus.getDefault().postSticky(mUserDetail);</span><br><span class="line"><span class="comment">//或者</span></span><br><span class="line">EventBus.getDefault().post(mUserDetail);</span><br></pre></td></tr></table></figure></p>
 <p>发出去之后，数据就可以在接收函数里处理了。</p>
@@ -354,153 +348,59 @@
 <p>优秀的开源项目里有很多东西值得我们去学习，希望以后也可以写出这么优美的代码。</p>
 <p>本人水平有限，文中若有偏差，请多多指导！</p>
 
-          
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/12/hello-world/" itemprop="url">
-                  hello world
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-12T00:11:26+08:00" content="2016-05-12">
-              2016-05-12
-            </time>
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/日志/" itemprop="url" rel="index">
-                    <span itemprop="name">日志</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
+            <a href="/tags/EventBus/" rel="tag">#EventBus</a>
           
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>很久之前，看到别人新建的blog，就很想拥有一个自己的blog，但是拖延症犯了，从建好主页到细节的编写，一直拖了1个多月，今天终于弄的差不多了，写了第一篇blog <strong>hello world</strong>，就像5年前第一次在vc上敲下的第一句话一样.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"hello world!"</span>&lt;&lt;<span class="built_in">endl</span>;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>送给自己一句话。</p>
-<blockquote>
-<p>岁月易老，勿忘初心</p>
-</blockquote>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/12/hello-world/" rel="next" title="hello world">
+                <i class="fa fa-chevron-left"></i> hello world
+              </a>
+            
+          </div>
 
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -508,6 +408,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -527,8 +431,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -589,6 +502,17 @@
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-概述"><span class="nav-number">1.</span> <span class="nav-text">1.概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-register"><span class="nav-number">2.</span> <span class="nav-text">2.register</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-post"><span class="nav-number">3.</span> <span class="nav-text">3.post</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-结束"><span class="nav-number">4.</span> <span class="nav-text">4. 结束</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -685,6 +609,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
